@@ -11,7 +11,6 @@ let quotes = [
 // STEP 2: Get DOM elements
 const quoteDisplay = document.getElementById("quoteDisplay");
 const newQuoteButton = document.getElementById("newQuote");
-const addQuoteBtn = document.getElementById("addQuoteBtn");
 
 // ----------------------------
 // STEP 3: Show a random quote
@@ -26,12 +25,53 @@ function showRandomQuote() {
   `;
 }
 
-// Show quote on load
 showRandomQuote();
 newQuoteButton.addEventListener("click", showRandomQuote);
 
 // ----------------------------
-// STEP 4: Add a new quote
+// STEP 4: Dynamically create the Add-Quote form
+// REQUIRED BY ASSIGNMENT
+// ----------------------------
+function createAddQuoteForm() {
+  // Parent container
+  const formContainer = document.createElement("div");
+  formContainer.style.marginTop = "20px";
+
+  // Input for quote text
+  const textInput = document.createElement("input");
+  textInput.id = "newQuoteText";
+  textInput.type = "text";
+  textInput.placeholder = "Enter a new quote";
+
+  // Input for category
+  const categoryInput = document.createElement("input");
+  categoryInput.id = "newQuoteCategory";
+  categoryInput.type = "text";
+  categoryInput.placeholder = "Enter quote category";
+  categoryInput.style.marginLeft = "10px";
+
+  // Add button
+  const addButton = document.createElement("button");
+  addButton.textContent = "Add Quote";
+  addButton.style.marginLeft = "10px";
+
+  // Add event to button
+  addButton.addEventListener("click", addQuote);
+
+  // Append elements
+  formContainer.appendChild(textInput);
+  formContainer.appendChild(categoryInput);
+  formContainer.appendChild(addButton);
+
+  // Add to body
+  document.body.appendChild(formContainer);
+}
+
+// Call the function so it runs
+createAddQuoteForm();
+
+// ----------------------------
+// STEP 5: Add quote function
 // ----------------------------
 function addQuote() {
   const newText = document.getElementById("newQuoteText").value.trim();
@@ -53,21 +93,5 @@ function addQuote() {
   document.getElementById("newQuoteCategory").value = "";
 
   showRandomQuote();
-
   alert("New quote added successfully!");
 }
-
-addQuoteBtn.addEventListener("click", addQuote);
-
-// ----------------------------
-// REQUIRED BY YOUR TASK
-// ----------------------------
-function createAddQuoteForm() {
-  // Your assignment requires this function to exist.
-  // Since the form already exists in your HTML, we simply acknowledge it.
-  console.log("createAddQuoteForm() called — form already exists in HTML.");
-}
-
-// Call it (required by your task)
-createAddQuoteForm();
-
