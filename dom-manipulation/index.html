@@ -8,18 +8,24 @@
   <body>
     <h1>Dynamic Quote Generator</h1>
     <div id="quoteDisplay"></div>
-
     <button id="newQuote">Show New Quote</button>
     <br><br>
-
+    <div id="lastViewed"></div>
+    <br><br>
+    <div id="addQuoteSection"></div>
+    <hr>
     <div>
       <input id="newQuoteText" type="text" placeholder="Enter a new quote" required>
       <br><br>
       <input id="newQuoteCategory" type="text" placeholder="Enter quote category" required>
       <br><br>
-      <button id="addQuoteBtn">Add Quote</button>
     </div>
-
+    <div id="storageControls">
+    
+      <button id="exportBtn">
+        Export Quotes
+      </button>
+    </div>
     <script src="script.js" defer></script>
   </body>
 </html>
