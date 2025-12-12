@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Quote Generator</title>
+    <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <h1>Dynamic Quote Generator</h1>
@@ -21,6 +22,11 @@
       <br><br>
     </div>
     <div id="storageControls">
+      <button id="importBtn">
+        Import Quotes
+      </button>
+      <label for="importFile" class="hidden-label">Import Quotes JSON File</label>
+      <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)">
     
       <button id="exportBtn">
         Export Quotes

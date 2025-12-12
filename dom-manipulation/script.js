@@ -19,6 +19,7 @@ const newQuoteButton = document.getElementById("newQuote");
 const addQuoteSection = document.getElementById("addQuoteSection");
 const lastViewedDiv = document.getElementById("lastViewed");
 const exportBtn = document.getElementById("exportBtn");
+const importBtn = document.getElementById("importBtn");
 const importFileInput = document.getElementById("importFile");
 
 // ----------------------------
@@ -291,6 +292,7 @@ function init() {
   // set up event listeners
   newQuoteButton.addEventListener("click", showRandomQuote);
   exportBtn.addEventListener("click", exportQuotesToJson);
+  importBtn.addEventListener("click", () => importFileInput.click());
   importFileInput.addEventListener("change", (evt) => {
     const file = evt.target.files && evt.target.files[0];
     importFromJsonFile(file);
