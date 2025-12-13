@@ -429,7 +429,8 @@ async function syncWithServer() {
 
   if (conflictDetected) {
     saveQuotes();
-    notifySync("New quotes synced from server.");
+    notifySync("Quotes synced with server!");
+;
   }
 }
 const syncStatusDiv = document.getElementById("syncStatus");
@@ -462,7 +463,8 @@ async function syncWithServer() {
     // 🔹 POST updated local data back to server (simulation)
     postQuotesToServer(quotes);
 
-    notifySync("Server sync completed. Conflicts resolved.");
+    notifySync("Quotes synced with server!");
+;
   }
 }
 
