@@ -3,6 +3,8 @@
 // ----------------------------
 const LOCAL_KEY = "dynamicQuotes_v1";
 const SESSION_KEY = "lastViewedQuote_session";
+const SERVER_URL = "https://jsonplaceholder.typicode.com/posts";
+const SYNC_INTERVAL = 60000; // 1 minute
 
 let quotes = [
   { text: "The only way to do great work is to love what you do.", category: "motivation" },
@@ -371,5 +373,63 @@ function init() {
 
 // run init when script is loaded
 init();
+
+async function fetchQuotesFromServer() {
+  try {
+    const response = await fetch(SERVER_URL);
+    const data = await response.json();
+
+    // Convert server posts → quote format
+    return data.slice(0, 5).map(post => ({
+      text: post.title,
+      category: "server"
+    }));
+  } catch (error) {
+    console.error("Server fetch failed:", error);
+    return [];
+  }
+}
+
+async function syncWithServer() {
+  const serverQuotes = await fetchQuotesFromServer();
+
+  if (serverQuotes.length === 0) return;
+
+  let conflictDetected = false;
+
+  serverQuotes.forEach(serverQuote => {
+    const exists = quotes.some(
+      local => local.text === serverQuote.text
+    );
+
+    if (!exists) {
+      quotes.push(serverQuote);
+      conflictDetected = true;
+    }
+  });
+
+  if (conflictDetected) {
+    saveQuotes();
+    notifySync("New quotes synced from server.");
+  }
+}
+const syncStatusDiv = document.getElementById("syncStatus");
+
+function notifySync(message) {
+  syncStatusDiv.textContent = message;
+
+  setTimeout(() => {
+    syncStatusDiv.textContent = "";
+  }, 4000);
+}
+// periodic server sync
+setInterval(syncWithServer, SYNC_INTERVAL);
+
+document.getElementById("manualSync")
+  .addEventListener("click", async () => {
+    await syncWithServer();
+    alert("Manual sync complete.");
+  });
+// End of script.js
 
 

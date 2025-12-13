@@ -5,3 +5,8 @@
 .hidden-label {
   display: none;
 }
+
+#syncStatus {
+  color: green;
+  font-weight: bold;
+}
