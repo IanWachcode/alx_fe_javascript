@@ -284,6 +284,25 @@ function exportQuotesToJson() {
   }
 }
 
+async function postQuotesToServer(quotesToSend) {
+  try {
+    const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+      method: "POST", // REQUIRED
+      headers: {
+        "Content-Type": "application/json" // REQUIRED
+      },
+      body: JSON.stringify(quotesToSend)
+    });
+
+    const result = await response.json();
+    console.log("Server POST response:", result);
+    return result;
+  } catch (error) {
+    console.error("Failed to POST quotes to server:", error);
+  }
+}
+
+
 // ----------------------------
 // JSON Import (file input)
 // ----------------------------
@@ -422,6 +441,31 @@ function notifySync(message) {
     syncStatusDiv.textContent = "";
   }, 4000);
 }
+
+async function syncWithServer() {
+  const serverQuotes = await fetchQuotesFromServer();
+  if (serverQuotes.length === 0) return;
+
+  let conflictDetected = false;
+
+  serverQuotes.forEach(serverQuote => {
+    const exists = quotes.some(q => q.text === serverQuote.text);
+    if (!exists) {
+      quotes.push(serverQuote);
+      conflictDetected = true;
+    }
+  });
+
+  if (conflictDetected) {
+    saveQuotes();
+
+    // 🔹 POST updated local data back to server (simulation)
+    postQuotesToServer(quotes);
+
+    notifySync("Server sync completed. Conflicts resolved.");
+  }
+}
+
 // periodic server sync
 setInterval(syncWithServer, SYNC_INTERVAL);
 
