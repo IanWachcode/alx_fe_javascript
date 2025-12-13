@@ -21,6 +21,8 @@ const lastViewedDiv = document.getElementById("lastViewed");
 const exportBtn = document.getElementById("exportBtn");
 const importBtn = document.getElementById("importBtn");
 const importFileInput = document.getElementById("importFile");
+const categoryFilter = document.getElementById("categoryFilter");
+
 
 // ----------------------------
 // Storage helpers
@@ -113,6 +115,57 @@ function showRandomQuote() {
   renderLastViewed();
 }
 
+function populateCategories() {
+  // extract categories using map (REQUIRED)
+  const categories = quotes.map(q => q.category);
+
+  // remove duplicates
+  const uniqueCategories = [...new Set(categories)];
+
+  // reset dropdown
+  categoryFilter.innerHTML = `<option value="all">All Categories</option>`;
+
+  uniqueCategories.forEach(category => {
+    const option = document.createElement("option");
+    option.value = category;
+    option.textContent = category;
+    categoryFilter.appendChild(option);
+  });
+
+  // restore saved filter
+  const savedFilter = localStorage.getItem("selectedCategory");
+  if (savedFilter) {
+    categoryFilter.value = savedFilter;
+  }
+}
+
+function filterQuotes() {
+  const selected = categoryFilter.value;
+
+  // persist filter
+  localStorage.setItem("selectedCategory", selected);
+
+  let filteredQuotes = quotes;
+
+  if (selected !== "all") {
+    filteredQuotes = quotes.filter(q => q.category === selected);
+  }
+
+  if (filteredQuotes.length === 0) {
+    quoteDisplay.textContent = "No quotes in this category.";
+    return;
+  }
+
+  const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
+  const quote = filteredQuotes[randomIndex];
+
+  quoteDisplay.innerHTML = `
+    <p><strong>"${escapeHtml(quote.text)}"</strong></p>
+    <p style="color: gray;">Category: ${escapeHtml(quote.category)}</p>
+  `;
+}
+
+
 // ----------------------------
 // createAddQuoteForm (uses createElement + appendChild)
 // ----------------------------
@@ -176,6 +229,8 @@ function addQuote() {
   }
 
   const newQuote = { text: newText, category: newCategory };
+  populateCategories();
+  filterQuotes();
 
   // push and persist
   quotes.push(newQuote);
@@ -285,6 +340,7 @@ function importFromJsonFile(file) {
 function init() {
   // load persisted quotes (if any)
   loadQuotes();
+  populateCategories();
 
   // build add-quote form
   createAddQuoteForm();
@@ -315,3 +371,5 @@ function init() {
 
 // run init when script is loaded
 init();
+
+
